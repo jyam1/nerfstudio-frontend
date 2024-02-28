@@ -29,25 +29,6 @@
             width: 80%; 
             max-width: 500px;
         }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: #fff;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-        
-        .button-container {
-            text-align: center;
-        }
         .alert-container {
             margin-top: 30px;
             margin-bottom: 30px;
@@ -62,11 +43,6 @@
     <div class="alert-container">
       <div id="dropzoneAlert"></div>
     </div>
-    <!-- Buttons for processing and training data -->
-    <div class="button-container">
-      <button id="processDataButton">Process Data</button>
-      <button id="trainDataButton">Train Data</button>
-    </div>
     <!-- Dropzone.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
     <script>
@@ -74,21 +50,6 @@
         function showDropzoneAlert(message) {
             document.getElementById("dropzoneAlert").innerHTML = message;
         }
-        // Function to handle processing data
-        function processData() {
-            // Implement logic here for processing data
-            showDropzoneAlert("Data processing is in progress...");
-        }
-
-        // Function to handle training data
-        function trainData() {
-            // Implement logic here for training data
-            showDropzoneAlert("Training data...");
-        }
-
-        // Add event listeners for button clicks
-        document.getElementById("processDataButton").addEventListener("click", processData);
-        document.getElementById("trainDataButton").addEventListener("click", trainData);
     </script>
 </body>
 </html>
