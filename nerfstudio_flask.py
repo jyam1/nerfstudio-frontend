@@ -1,7 +1,7 @@
 import flask
 import subprocess
 import os
-from werkzeug.utils import secure_filename
+import signal
 
 app = flask.Flask(__name__)
 
@@ -32,6 +32,7 @@ def send_video():
     subprocess.run(ns_process_command)
     
     shutdown_server()
+    os.kill(os.getpid(), signal.SIGINT)
 
 def shutdown_server():
     func = flask.request.environ.get('werkzeug.server.shutdown')
