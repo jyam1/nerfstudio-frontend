@@ -3,6 +3,7 @@ import subprocess
 import os
 import threading
 import sys
+import time
 
 app = flask.Flask(__name__)
 
@@ -36,14 +37,8 @@ def send_video():
     thread = threading.Thread(target=train_model)
     thread.start()
     
-    shutdown_server()
     sys.exit()
 
-def shutdown_server():
-    func = flask.request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
 
 def train_model():
     print("Training...")
