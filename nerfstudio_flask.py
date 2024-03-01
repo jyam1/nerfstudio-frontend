@@ -23,7 +23,7 @@ def send_video():
         output_path = "./" + uploaded_video.filename + "_output"
     
     print("Using COLMAP to process video...")
-    ns_process_command = ["ns-process-data", "video" "--data", data_path, "--output-dir", output_path]
+    ns_process_command = ["ns-process-data", "video", "--data", data_path, "--output-dir", output_path]
     subprocess.run(ns_process_command)
     
     print("Training data...")
