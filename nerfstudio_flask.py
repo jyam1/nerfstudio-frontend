@@ -28,11 +28,19 @@ def send_video():
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
     subprocess.run(ns_process_command)
     
+    shutdown()
+    
     print("Training data...")
     ns_train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(ns_train_command)
     
     return flask.redirect(flask.url_for("home_page"))
 
+def shutdown():
+    func = flask.request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+    
 if __name__ == "__main__": 
     app.run(debug=True, host='0.0.0.0', port=7007)
