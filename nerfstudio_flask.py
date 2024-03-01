@@ -13,6 +13,8 @@ def home_page():
 
 @app.route('/', methods=['POST'])
 def send_video():
+    global output_path
+    
     uploaded_video = flask.request.files['file']
     print(uploaded_video)
     
@@ -32,12 +34,9 @@ def send_video():
     subprocess.run(ns_process_command)
     
     shutdown_server()
-    os.kill(os.getpid(), signal.SIGINT)
 
 def shutdown_server():
     func = flask.request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
     func()
     
 if __name__ == "__main__": 
