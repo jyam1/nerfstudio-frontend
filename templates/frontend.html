@@ -1,12 +1,55 @@
+<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>File Upload</title>
+    <!--Links to Dropzone CSS to style Dropzone form-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .dropzone {
+            border: 2px dashed #ccc;
+            border-radius: 8px; 
+            min-height: 200px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80%; 
+            max-width: 500px;
+        }
+        .alert-container {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            text-align: center; 
+        }
+  </style>
   </head>
-  <body>
+<body>
     <h1>Nerfstudio</h1>
-    <form action="{{ url_for('home_page') }}" class="dropzone">
-    </form>
+    <!-- Dropzone button for uploading files-->
+    <form action="{{ url_for('home_page') }}" class="dropzone" id="myDropzone"></form>
+    <div class="alert-container">
+      <div id="dropzoneAlert"></div>
+    </div>
+    <!-- Dropzone.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
-  </body>
+    <script>
+        // Function to show alert below Dropzone
+        function showDropzoneAlert(message) {
+            document.getElementById("dropzoneAlert").innerHTML = message;
+        }
+    </script>
+</body>
 </html>
