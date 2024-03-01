@@ -28,7 +28,7 @@ def send_video():
     
     print("Training data...")
     ns_train_command = ["ns-train", "splatfacto", "--data", data_path]
-    subprocess(ns_train_command)
+    subprocess.run(ns_train_command)
     
     return flask.redirect(flask.url_for("home_page"))
 
