@@ -45,4 +45,4 @@ def train_model():
     subprocess.run(["ns-train", "splatfacto", "--data", output_path])
     
 if __name__ == "__main__": 
-    app.run(debug=True, host='0.0.0.0', port=8008)
+    app.run(debug=True, host='0.0.0.0', port=7007)
