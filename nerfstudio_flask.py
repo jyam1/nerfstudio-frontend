@@ -28,9 +28,8 @@ def send_video():
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
     subprocess.run(ns_process_command)
     
-    shutdown()
-    
     print("Training data...")
+    shutdown()
     ns_train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(ns_train_command)
     
