@@ -2,6 +2,7 @@ import flask
 import subprocess
 import os
 import threading
+import sys
 
 app = flask.Flask(__name__)
 
@@ -36,6 +37,7 @@ def send_video():
     thread.start()
     
     shutdown_server()
+    sys.exit()
 
 def shutdown_server():
     func = flask.request.environ.get('werkzeug.server.shutdown')
