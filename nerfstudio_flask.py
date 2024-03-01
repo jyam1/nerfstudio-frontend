@@ -14,7 +14,8 @@ def home_page():
 @app.route('/', methods=['POST'])
 def send_video():
     uploaded_video = flask.request.files['file']
-    print(uploaded_video)
+    
+    global output_path
     
     if uploaded_video.filename != "":
         data_path = uploaded_video.filename + "_data"
