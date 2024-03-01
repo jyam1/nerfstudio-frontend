@@ -13,7 +13,7 @@ def home_page():
 
 @app.route('/', methods=['POST'])
 def send_video():
-    uploaded_video = secure_filename(flask.request.files['file'])
+    uploaded_video = flask.request.files['file']
     print(uploaded_video)
     
     if uploaded_video.filename != "":
