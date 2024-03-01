@@ -2,7 +2,6 @@ import flask
 import subprocess
 import os
 from werkzeug.utils import secure_filename
-from werkzeug.serving import shutdown_server
 
 app = flask.Flask(__name__)
 
@@ -34,6 +33,11 @@ def send_video():
     
     shutdown_server()
 
+def shutdown_server():
+    func = flask.request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
     
 if __name__ == "__main__": 
     app.run(debug=True, host='0.0.0.0', port=7007)
