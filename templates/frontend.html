@@ -5,7 +5,6 @@
     <!--Links to Dropzone CSS to style Dropzone form-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
     <style>
-        
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
@@ -41,15 +40,26 @@
     <!-- Dropzone button for uploading files-->
     <form action="{{ url_for('home_page') }}" class="dropzone" id="myDropzone"></form>
     <div class="alert-container">
-      <div id="dropzoneAlert"></div>
+        <div id="processingStatus"></div>
     </div>
     <!-- Dropzone.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        // Function to show alert below Dropzone
-        function showDropzoneAlert(message) {
-            document.getElementById("dropzoneAlert").innerHTML = message;
+        // Function to periodically check processing status
+        function checkProcessingStatus() {
+            // Make a GET request to the /status endpoint
+            fetch('/status').then(response => response.text())
+                .then(data => {
+                    // Update the HTML element with id "processingStatus" based on the received status
+                    document.getElementById("processingStatus").innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
         }
+
+        // Periodically check the processing status every 5 seconds
+        setInterval(checkProcessingStatus, 5000);
+
     </script>
 </body>
 </html>
