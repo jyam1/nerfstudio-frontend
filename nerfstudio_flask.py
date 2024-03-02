@@ -42,8 +42,7 @@ def send_video():
 
 
 def train_model():
-    global processing_completed
-    processing_completed = True
+    time.sleep(10)
     print("Training...")
     subprocess.run(["ns-train", "splatfacto", "--data", output_path])
     
