@@ -41,6 +41,7 @@ def send_video():
 
 
 def train_model():
+    time.sleep(10)
     print("Training...")
     subprocess.run(["ns-train", "splatfacto", "--data", output_path])
     
