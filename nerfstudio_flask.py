@@ -4,9 +4,6 @@ import os
 
 app = flask.Flask(__name__)
 
-output_path = ""
-processing_completed = False
-
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # F U N C T I O N S
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -109,9 +106,9 @@ def process_status():
 def send_video():
     uploaded_video = flask.request.files['file']
     
-    global output_path
-    global processing_completed 
+    processing_completed = False
     video_path = None
+    output_path = None
     
     upload_video(uploaded_video, output_path, video_path)
     process_colmap(video_path, output_path)
