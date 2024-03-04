@@ -20,7 +20,7 @@ processing_completed = False
  Returns:
     N/A
 '''
-def upload_video(uploaded_video, output_path, video_path):
+def upload_video(uploaded_video):
     if uploaded_video.filename != "":
         
         #make data directory
@@ -33,6 +33,8 @@ def upload_video(uploaded_video, output_path, video_path):
         #make path for video and output
         video_path = os.path.join(data_path, uploaded_video.filename)
         output_path = uploaded_video.filename + "_output"
+        
+        return video_path, output_path
 
 '''
  Function:      home_page
@@ -74,14 +76,11 @@ def send_video():
     uploaded_video = flask.request.files['file']
     
     global processing_completed 
-    video_path = None
-    output_path = None
-    
-    upload_video(uploaded_video, output_path, video_path)
-    
     processing_completed = False
     
-    return flask.redirect(flask.url_for('colmap', output_path = output_path, video_path = video_path))
+    video_path, output_path = upload_video(uploaded_video)
+    
+    return flask.redirect(flask.url_for('process_colmap', output_path = output_path, video_path = video_path))
 
 '''
  Function:      process_colmap
@@ -92,15 +91,15 @@ def send_video():
  Returns:
     N/A
 '''
-@app.route('/colmap/<video_path>/<output_path>')
-def process_colmap(video_path, output_path):
+@app.route('/process_colmap/<video_path>/<output_path>')
+def process_colmap(output_path, video_path):
     print("Using COLMAP to process video...")
     
     #run command for COLMAP processing
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
     subprocess.run(ns_process_command)
     
-    return flask.redirect(flask.url_for('splatfacto', output_path = output_path, processing_completed = processing_completed))
+    return flask.redirect(flask.url_for('train_data', output_path = output_path))
 
 '''
  Function:      train_data
@@ -111,16 +110,17 @@ def process_colmap(video_path, output_path):
  Returns:
     N/A
 ''' 
-@app.route("/splatfacto/<output_path>/<processing_completed>")
-def train_data(output_path, processing_completed):
-    #processing finished
-    processing_completed = True
+@app.route("/train_data/<output_path>")
+def train_data(output_path):
+    output_path = flask.request.args.get('output_path')
     
     print("Training...")
     
     #run command to train data in splatfacto model
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
+    
+    return flask.redirect(flask.url_for('home_page'))
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=7007)
