@@ -121,12 +121,17 @@ def process_colmap(output_path, video_path):
 def train_data(output_path):
     output_path = flask.request.args.get('output_path')
     
+    global processing_completed
+    processing_completed = True 
+    
     print("Training...")
     
     #run command to train data in splatfacto model
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
     training_completed = True
+    
+    return "Training finished"
 
 
 if __name__ == "__main__":
