@@ -7,6 +7,10 @@ app = flask.Flask(__name__)
 output_path = ""
 processing_completed = False
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# F U N C T I O N S
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 '''
  Function:      upload_video
  Purpose:       Frontend allows user to upload video and writes into kubernetes pod
@@ -19,11 +23,15 @@ processing_completed = False
 '''
 def upload_video(uploaded_video, output_path, video_path):
     if uploaded_video.filename != "":
+        
+        #make data directory
         data_path = uploaded_video.filename + "_data"
         os.mkdir(data_path)
         
+        #save video in pod
         uploaded_video.save(os.path.join(data_path, uploaded_video.filename))
         
+        #make path for video and output
         video_path = os.path.join(data_path, uploaded_video.filename)
         output_path = uploaded_video.filename + "_output"
 
@@ -38,6 +46,8 @@ def upload_video(uploaded_video, output_path, video_path):
 '''
 def process_colmap(video_path, output_path):
     print("Using COLMAP to process video...")
+    
+    #run command for COLMAP processing
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
     subprocess.run(ns_process_command)
 
@@ -51,8 +61,12 @@ def process_colmap(video_path, output_path):
     N/A
 '''
 def train_data(output_path, processing_completed):
+    #processing finished
     processing_completed = True
+    
     print("Training...")
+    
+    #run command to train data in splatfacto model
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
 
