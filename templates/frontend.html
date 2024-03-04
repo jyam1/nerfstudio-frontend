@@ -41,6 +41,9 @@
     <form action="{{ url_for('home_page') }}" class="dropzone" id="myDropzone"></form>
     <div class="alert-container">
         <div id="processingStatus"></div>
+        {% if status == "Video processing complete. Training complete." %}
+            <a href="https://nerf-usra.nrp-nautilus.io/">Download processed data</a>
+        {% endif %}
     </div>
     <!-- Dropzone.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>

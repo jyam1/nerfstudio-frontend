@@ -5,6 +5,7 @@ import os
 app = flask.Flask(__name__)
 
 processing_completed = False
+training_completed = False
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # F U N C T I O N S
@@ -58,7 +59,13 @@ def home_page():
 '''
 @app.route('/status')
 def process_status():
-    if processing_completed:
+    global training_completed
+    global processing_completed
+    
+    # Check if both processing and training are completed
+    if processing_completed and training_completed:
+        return "Video processing complete. Training complete."
+    elif processing_completed:
         return "Video processing complete. Training data in progress..."
     else:
         return "Processing video using Colmap..."
@@ -119,8 +126,8 @@ def train_data(output_path):
     #run command to train data in splatfacto model
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
-    
-    return flask.redirect(flask.url_for('home_page'))
+    training_completed = True
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=7007)
