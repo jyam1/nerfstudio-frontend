@@ -35,41 +35,6 @@ def upload_video(uploaded_video, output_path, video_path):
         output_path = uploaded_video.filename + "_output"
 
 '''
- Function:      process_colmap
- Purpose:       Process video through COLMAP
- Parameters:    
-    (str)video_path:    Path to uploaded video
-    (str)output_path:   Path to output of processed video
- Returns:
-    N/A
-'''
-def process_colmap(video_path, output_path):
-    print("Using COLMAP to process video...")
-    
-    #run command for COLMAP processing
-    ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
-    subprocess.run(ns_process_command)
-
-'''
- Function:      train_data
- Purpose:       Train processed data through splatfacto model
- Parameters:    
-    (str)output_path:               Path to output of processed video
-    (bool)processing_completed:     Tells whether processing for COLMAP is finished
- Returns:
-    N/A
-'''
-def train_data(output_path, processing_completed):
-    #processing finished
-    processing_completed = True
-    
-    print("Training...")
-    
-    #run command to train data in splatfacto model
-    train_command = ["ns-train", "splatfacto", "--data", output_path]
-    subprocess.run(train_command)
-
-'''
  Function:      home_page
  Purpose:       Home page of frontend
  Parameters:    
@@ -113,9 +78,49 @@ def send_video():
     output_path = None
     
     upload_video(uploaded_video, output_path, video_path)
-    process_colmap(video_path, output_path)
+    
     processing_completed = False
-    train_data(output_path, processing_completed)
+    
+    return flask.redirect(flask.url_for('colmap', output_path = output_path, video_path = video_path))
+
+'''
+ Function:      process_colmap
+ Purpose:       Process video through COLMAP
+ Parameters:    
+    (str)video_path:    Path to uploaded video
+    (str)output_path:   Path to output of processed video
+ Returns:
+    N/A
+'''
+@app.route('/colmap/<video_path>/<output_path>')
+def process_colmap(video_path, output_path):
+    print("Using COLMAP to process video...")
+    
+    #run command for COLMAP processing
+    ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
+    subprocess.run(ns_process_command)
+    
+    return flask.redirect(flask.url_for('splatfacto', output_path = output_path, processing_completed = processing_completed))
+
+'''
+ Function:      train_data
+ Purpose:       Train processed data through splatfacto model
+ Parameters:    
+    (str)output_path:               Path to output of processed video
+    (bool)processing_completed:     Tells whether processing for COLMAP is finished
+ Returns:
+    N/A
+''' 
+@app.route("/splatfacto/<output_path>/<processing_completed>")
+def train_data(output_path, processing_completed):
+    #processing finished
+    processing_completed = True
+    
+    print("Training...")
+    
+    #run command to train data in splatfacto model
+    train_command = ["ns-train", "splatfacto", "--data", output_path]
+    subprocess.run(train_command)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=7007)
