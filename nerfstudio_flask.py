@@ -4,6 +4,8 @@ import os
 
 app = flask.Flask(__name__)
 
+processing_completed = False
+
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # F U N C T I O N S
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -106,7 +108,7 @@ def process_status():
 def send_video():
     uploaded_video = flask.request.files['file']
     
-    processing_completed = False
+    global processing_completed 
     video_path = None
     output_path = None
     
