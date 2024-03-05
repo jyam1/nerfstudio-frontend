@@ -7,7 +7,7 @@ app = flask.Flask(__name__)
 # Note for some reason using a string status doesn't work
 processing_completed = False
 training_completed = False
-video_uploading = False
+video_uploaded = False
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # F U N C T I O N S
@@ -63,16 +63,15 @@ def home_page():
 def process_status():
     global training_completed
     global processing_completed
-    global video_uploading
-    
-    if video_uploading and not(processing_completed or training_completed):
-        return "Uploading video..."
-    elif processing_completed and training_completed:
-        return "Video processing and Training complete."
-    elif processing_completed and not training_completed:
-        return "Video processing complete. Training data in progress..."
-    elif not (processing_completed or training_completed) and video_uploading:
-        return "Processing video using Colmap..."
+    global video_uploaded
+
+    if video_uploaded:
+        if processing_completed and training_completed:
+            return "Video processing and Training complete."
+        elif processing_completed and not training_completed:
+            return "Video processing complete. Training data in progress..."
+        elif not (processing_completed or training_completed):
+            return "Processing video using Colmap..."
     else:
         return ""
 
@@ -86,10 +85,6 @@ def process_status():
 '''
 @app.route('/', methods=['POST'])
 def send_video():
-    
-    # Update status
-    global video_uploading
-    video_uploading = True
 
     uploaded_video = flask.request.files['file']
     
@@ -97,7 +92,11 @@ def send_video():
     processing_completed = False
     
     video_path, output_path = upload_video(uploaded_video)
-    
+
+    # Update status
+    global video_uploading
+    video_uploaded = True
+
     return flask.redirect(flask.url_for('process_colmap', output_path = output_path, video_path = video_path))
 
 '''
