@@ -1,6 +1,7 @@
 import flask
 import subprocess
 import os
+import threading
 
 app = flask.Flask(__name__)
 
@@ -96,9 +97,11 @@ def send_video():
     # Update status
     global video_uploaded
     video_uploaded = True
-    
-    process_colmap(video_path, output_path)
-    train_data(output_path)
+    colmap_thread = threading.Thread(target=process_colmap, args=(video_path, output_path))
+    colmap_thread.start()
+    colmap_thread.join()
+    train_thread = threading.Thread(target=train_data, args=(output_path))
+    train_thread.start()
 
 '''
  Function:      process_colmap
@@ -126,7 +129,6 @@ def process_colmap(video_path, output_path):
     N/A
 ''' 
 def train_data(output_path):
-    output_path = flask.request.args.get('output_path')
     
     global processing_completed
     global training_completed
@@ -142,4 +144,4 @@ def train_data(output_path):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8008)
+    app.run(debug=True, host='0.0.0.0', port=7007)
