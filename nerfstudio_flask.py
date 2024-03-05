@@ -93,8 +93,10 @@ def send_video():
     
     video_path, output_path = upload_video(uploaded_video)
 
+    print(video_path)
+    print(output_path)
     # Update status
-    global video_uploading
+    global video_uploaded
     video_uploaded = True
 
     return flask.redirect(flask.url_for('process_colmap', output_path = output_path, video_path = video_path))
