@@ -72,11 +72,13 @@ def process_status():
     if video_uploading:
         return "Uploading video..."
     elif processing_completed and training_completed:
-        return "Video processing complete. Training complete."
+        return "Video processing and Training complete."
     elif processing_completed:
         return "Video processing complete. Training data in progress..."
-    else:
+    elif not (processing_completed or training_completed):
         return "Processing video using Colmap..."
+    else:
+        return ""
 
 '''
  Function:      send_video
