@@ -23,6 +23,9 @@ status = ""
 def upload_video(uploaded_video):
     if uploaded_video.filename != "":
         
+        global status
+        status = "Uploading video..."
+        
         #make data directory
         data_path = uploaded_video.filename + "_data"
         os.mkdir(data_path)
@@ -34,9 +37,7 @@ def upload_video(uploaded_video):
         video_path = os.path.join(data_path, uploaded_video.filename)
         output_path = uploaded_video.filename + "_output"
         
-        global status
-        status = "Uploading video..."
-        
+
         return video_path, output_path
 
 '''
