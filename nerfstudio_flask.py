@@ -4,7 +4,8 @@ import os
 
 app = flask.Flask(__name__)
 
-status = ""
+processing_completed = False
+training_completed = False
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # F U N C T I O N S
@@ -23,9 +24,6 @@ status = ""
 def upload_video(uploaded_video):
     if uploaded_video.filename != "":
         
-        global status
-        status = "Uploading video..."
-        
         #make data directory
         data_path = uploaded_video.filename + "_data"
         os.mkdir(data_path)
@@ -37,7 +35,6 @@ def upload_video(uploaded_video):
         video_path = os.path.join(data_path, uploaded_video.filename)
         output_path = uploaded_video.filename + "_output"
         
-
         return video_path, output_path
 
 '''
@@ -54,7 +51,7 @@ def home_page():
 
 '''
  Function:      process_status
- Purpose:       Returns status of program, sends signal to frontend to notify users
+ Purpose:       Process status for COLMAP, sends signal to frontend to notify users
  Parameters:    
     N/A
  Returns:
@@ -62,8 +59,16 @@ def home_page():
 '''
 @app.route('/status')
 def process_status():
-    global status
-    return status
+    global training_completed
+    global processing_completed
+    
+    # Check if both processing and training are completed
+    if processing_completed and training_completed:
+        return "Video processing complete. Training complete."
+    elif processing_completed:
+        return "Video processing complete. Training data in progress..."
+    else:
+        return "Processing video using Colmap..."
 
 '''
  Function:      send_video
@@ -76,6 +81,9 @@ def process_status():
 @app.route('/', methods=['POST'])
 def send_video():
     uploaded_video = flask.request.files['file']
+    
+    global processing_completed 
+    processing_completed = False
     
     video_path, output_path = upload_video(uploaded_video)
     
@@ -92,8 +100,7 @@ def send_video():
 '''
 @app.route('/process_colmap/<video_path>/<output_path>')
 def process_colmap(output_path, video_path):
-    global status
-    status = "Processing video using Colmap..."
+    print("Using COLMAP to process video...")
     
     #run command for COLMAP processing
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
@@ -114,15 +121,17 @@ def process_colmap(output_path, video_path):
 def train_data(output_path):
     output_path = flask.request.args.get('output_path')
     
-    global status
-    status = "Training data..."
+    global processing_completed
+    global training_completed
+    processing_completed = True 
+    
+    print("Training...")
     
     #run command to train data in splatfacto model
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
-
-    status = "Training finished"
-
+    training_completed = True
+    
     return "Training finished"
 
 
