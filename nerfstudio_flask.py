@@ -69,13 +69,13 @@ def process_status():
     global processing_completed
     global video_uploading
     
-    if video_uploading:
+    if video_uploading and not(processing_completed or training_completed):
         return "Uploading video..."
     elif processing_completed and training_completed:
         return "Video processing and Training complete."
-    elif processing_completed:
+    elif processing_completed and not training_completed:
         return "Video processing complete. Training data in progress..."
-    elif not (processing_completed or training_completed):
+    elif not (processing_completed or training_completed) and video_uploading:
         return "Processing video using Colmap..."
     else:
         return ""
