@@ -4,8 +4,10 @@ import os
 
 app = flask.Flask(__name__)
 
+# Note for some reason using a string status doesn't work
 processing_completed = False
 training_completed = False
+video_uploading = False
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # F U N C T I O N S
@@ -24,14 +26,18 @@ training_completed = False
 def upload_video(uploaded_video):
     if uploaded_video.filename != "":
         
-        #make data directory
+        # Update status
+        global video_uploading
+        video_uploading = True
+
+        # Make data directory
         data_path = uploaded_video.filename + "_data"
         os.mkdir(data_path)
         
-        #save video in pod
+        # Save video in pod
         uploaded_video.save(os.path.join(data_path, uploaded_video.filename))
-        
-        #make path for video and output
+
+        # Make path for video and output
         video_path = os.path.join(data_path, uploaded_video.filename)
         output_path = uploaded_video.filename + "_output"
         
@@ -61,9 +67,11 @@ def home_page():
 def process_status():
     global training_completed
     global processing_completed
+    global video_uploading
     
-    # Check if both processing and training are completed
-    if processing_completed and training_completed:
+    if video_uploading:
+        return "Uploading video..."
+    elif processing_completed and training_completed:
         return "Video processing complete. Training complete."
     elif processing_completed:
         return "Video processing complete. Training data in progress..."
@@ -102,7 +110,7 @@ def send_video():
 def process_colmap(output_path, video_path):
     print("Using COLMAP to process video...")
     
-    #run command for COLMAP processing
+    # Run command for COLMAP processing
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
     subprocess.run(ns_process_command)
     
@@ -127,7 +135,7 @@ def train_data(output_path):
     
     print("Training...")
     
-    #run command to train data in splatfacto model
+    # Run command to train data in splatfacto model
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
     training_completed = True
