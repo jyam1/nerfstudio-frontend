@@ -83,7 +83,7 @@ def process_status():
  Returns:
     N/A
 '''
-@app.route('/send_video', methods=['POST'])
+@app.route('/', methods=['POST'])
 def send_video():
 
     uploaded_video = flask.request.files['file']
