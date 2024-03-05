@@ -83,7 +83,7 @@ def process_status():
  Returns:
     N/A
 '''
-@app.route('/', methods=['POST'])
+@app.route('/send_video', methods=['POST'])
 def send_video():
 
     uploaded_video = flask.request.files['file']
@@ -93,13 +93,12 @@ def send_video():
     
     video_path, output_path = upload_video(uploaded_video)
 
-    print(video_path)
-    print(output_path)
     # Update status
     global video_uploaded
     video_uploaded = True
-
-    return flask.redirect(flask.url_for('process_colmap', output_path = output_path, video_path = video_path))
+    
+    process_colmap(video_path, output_path)
+    train_data(output_path)
 
 '''
  Function:      process_colmap
@@ -110,14 +109,12 @@ def send_video():
  Returns:
     N/A
 '''
-@app.route('/process_colmap/<video_path>/<output_path>')
-def process_colmap(output_path, video_path):
+def process_colmap(video_path, output_path):
     
     # Run command for COLMAP processing
+    print("Process")
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
     subprocess.run(ns_process_command)
-    
-    return flask.redirect(flask.url_for('train_data', output_path = output_path))
 
 '''
  Function:      train_data
@@ -128,7 +125,6 @@ def process_colmap(output_path, video_path):
  Returns:
     N/A
 ''' 
-@app.route("/train_data/<output_path>")
 def train_data(output_path):
     output_path = flask.request.args.get('output_path')
     
@@ -143,7 +139,6 @@ def train_data(output_path):
     subprocess.run(train_command)
     training_completed = True
     
-    return "Training finished"
 
 
 if __name__ == "__main__":
