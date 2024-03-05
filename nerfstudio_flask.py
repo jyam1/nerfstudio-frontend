@@ -34,6 +34,9 @@ def upload_video(uploaded_video):
         video_path = os.path.join(data_path, uploaded_video.filename)
         output_path = uploaded_video.filename + "_output"
         
+        global status
+        status = "Uploading video..."
+        
         return video_path, output_path
 
 '''
@@ -72,8 +75,6 @@ def process_status():
 @app.route('/', methods=['POST'])
 def send_video():
     uploaded_video = flask.request.files['file']
-    global status
-    status = "Uploading video..."
     
     video_path, output_path = upload_video(uploaded_video)
     
