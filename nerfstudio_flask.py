@@ -25,10 +25,6 @@ video_uploading = False
 '''
 def upload_video(uploaded_video):
     if uploaded_video.filename != "":
-        
-        # Update status
-        global video_uploading
-        video_uploading = True
 
         # Make data directory
         data_path = uploaded_video.filename + "_data"
@@ -90,6 +86,11 @@ def process_status():
 '''
 @app.route('/', methods=['POST'])
 def send_video():
+    
+    # Update status
+    global video_uploading
+    video_uploading = True
+
     uploaded_video = flask.request.files['file']
     
     global processing_completed 
@@ -110,7 +111,6 @@ def send_video():
 '''
 @app.route('/process_colmap/<video_path>/<output_path>')
 def process_colmap(output_path, video_path):
-    print("Using COLMAP to process video...")
     
     # Run command for COLMAP processing
     ns_process_command = ["ns-process-data", "video", "--data", video_path, "--output-dir", output_path]
