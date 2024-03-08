@@ -140,8 +140,6 @@ def train_data(output_path):
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
     training_completed = True
-    
-
-
+  
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=7007)
