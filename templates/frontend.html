@@ -41,7 +41,7 @@
     <form action="{{ url_for('home_page') }}" class="dropzone" id="myDropzone"></form>
     <div class="alert-container">
         <div id="processingStatus"></div>
-        {% if status == "Video processing complete. Training data in progress..." %}
+        {% if status == "Initializing GPUs for training..." %}
             <a href="https://nerf-usra.nrp-nautilus.io/">Download processed data</a>
         {% endif %}
     </div>
@@ -58,7 +58,7 @@
                     // Update the HTML element with id "processingStatus" based on the received status
                     document.getElementById("processingStatus").innerText = data;
 
-                    if (data === "Video processing complete. Training data in progress..."){
+                    if (data === "Initializing GPUs for training..."){
                         setTimeout(() => {
                             location.replace("https://nerf-usra.nrp-nautilus.io/");
                         }, 180000); 

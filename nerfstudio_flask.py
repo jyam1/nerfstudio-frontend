@@ -66,12 +66,10 @@ def process_status():
     global video_uploaded
 
     if video_uploaded:
-        if processing_completed and training_completed:
-            return "Video processing and Training complete."
-        elif processing_completed and not training_completed:
-            return "Video processing complete. Training data in progress..."
+        if processing_completed and not training_completed:
+            return "Initializing GPUs for training..."
         elif not (processing_completed or training_completed):
-            return "Processing video using Colmap..."
+            return "Processing video..."
     else:
         return ""
 
@@ -140,6 +138,6 @@ def train_data(output_path):
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
     training_completed = True
-  
+      
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=7007)
+    app.run(debug=True, host='0.0.0.0', port=8008)
