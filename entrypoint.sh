@@ -4,4 +4,4 @@
 conda activate nerfstudio
 
 # Run the Python file
-python nerfstudio_flask.py
+python /nerfstudio-frontend/nerfstudio_flask.py
