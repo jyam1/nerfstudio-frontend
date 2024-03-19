@@ -83,20 +83,20 @@ def process_status():
 '''
 @app.route('/', methods=['POST'])
 def send_video():
+    global processing_completed
+    global video_uploaded  
+    global training_completed
 
     uploaded_video = flask.request.files['file']
     
-    global processing_completed 
-    processing_completed = False
-    
     video_path, output_path = upload_video(uploaded_video)
-
-    # Update status
-    global video_uploaded
     video_uploaded = True
 
     process_colmap(video_path, output_path)
+    processing_completed = True
+
     train_data(output_path)
+    training_completed = True
 
     return ""
     
@@ -127,17 +127,11 @@ def process_colmap(video_path, output_path):
     N/A
 ''' 
 def train_data(output_path):
-    
-    global processing_completed
-    global training_completed
-    processing_completed = True 
-    
-    print("Training...")
-    
+
     # Run command to train data in splatfacto model
+    print("Training...")
     train_command = ["ns-train", "splatfacto", "--data", output_path]
     subprocess.run(train_command)
-    training_completed = True
       
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8008)
