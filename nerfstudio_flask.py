@@ -135,7 +135,7 @@ def train_data(output_path):
 
     # Run command to train data in splatfacto model
     print("Training...")
-    train_command = ["ns-train", "splatfacto", "--data", output_path]
+    train_command = ["ns-train", "splatfacto", "--data", output_path, "--max-num-iterations", "7000"]
     subprocess.run(train_command)
       
 if __name__ == "__main__":
