@@ -51,6 +51,11 @@ def upload_video(uploaded_video):
 def home_page():
     return flask.render_template("frontend.html")
 
+@app.route('/showcase')
+def showcase_page():
+    return flask.render_template("showcase.html")
+
+
 '''
  Function:      process_status
  Purpose:       Process status for COLMAP, sends signal to frontend to notify users
