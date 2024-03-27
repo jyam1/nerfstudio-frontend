@@ -102,10 +102,11 @@ def send_video():
 
     train_data(output_path)
     training_completed = True
+    
+    export_and_download(uploaded_video)
 
     return ""
     
-
 '''
  Function:      process_colmap
  Purpose:       Process video through COLMAP
@@ -137,6 +138,26 @@ def train_data(output_path):
     print("Training...")
     train_command = ["ns-train", "splatfacto", "--data", output_path, "--max-num-iterations", "7000"]
     subprocess.run(train_command)
-      
+
+def export_and_download(uploaded_video):
+    
+    ply_output_path = uploaded_video.filename + "_ply"
+    config_path = find_config_filepath()
+    ply_file_path = os.path.join(ply_output_path, "filename")
+    os.mkdir(ply_output_path)
+    
+    ns_export_command = ["ns-export", "gaussian-splat", "--load-config", config_path, "--output-dir", ply_output_path] 
+    subprocess.run(ns_export_command)
+    
+    flask.send_file(ply_file_path, as_attachment=True)
+
+def find_config_filepath():
+    find_filepath_command = ["find", "/outputs", "-name", "config.yml"]
+    result = subprocess.run(find_filepath_command, capture_output=True, text=True)
+    
+    output = result.stdout.strip().split('\n')
+    
+    return output
+    
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8008)
