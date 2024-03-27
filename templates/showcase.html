@@ -75,11 +75,15 @@
             var renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
             renderer.setSize(window.innerWidth * 0.5, window.innerHeight * 0.8);
 
+            var loader = new THREE.PLYLoader();
             loader.load(plyFileName, function(geometry) {
                 var material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
                 var mesh = new THREE.Mesh(geometry, material);
                 scene.add(mesh);
                 document.getElementById('loadingMessage').style.display = 'none'; // Hide loading message
+            }, undefined, function(error) {
+                console.error('Error loading PLY file:', error);
+                document.getElementById('loadingMessage').innerText = 'Error loading PLY file';
             });
 
 
