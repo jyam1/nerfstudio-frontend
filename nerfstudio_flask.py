@@ -104,6 +104,8 @@ def send_video():
     training_completed = True
     
     export_and_download(uploaded_video)
+    
+    viewer()
 
     return ""
     
@@ -148,7 +150,7 @@ def export_and_download(uploaded_video):
     ply_file_path = os.path.join(ply_output_path, "filename")
     os.mkdir(ply_output_path)
     
-    ns_export_command = ["ns-export", "gaussian-splat", "--load-config", config_path, "--output-dir", ply_output_path] 
+    ns_export_command = ["ns-export", "gaussian-splat", "--load-config", config_path[0], "--output-dir", ply_output_path] 
     subprocess.run(ns_export_command)
     
     flask.send_file(ply_file_path, as_attachment=True)
@@ -160,6 +162,12 @@ def find_config_filepath():
     output = result.stdout.strip().split('\n')
     
     return output
+
+def viewer():
+    config_path = find_config_filepath()
+    ns_viewer_command = ["ns-viewer", "--load-config", config_path[0]]
+    
+    subprocess.run(ns_viewer_command)
     
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8008)
