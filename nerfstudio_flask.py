@@ -132,11 +132,13 @@ def process_colmap(video_path, output_path):
  Returns:
     N/A
 ''' 
+#Training -> No export
+#Train -> kill -> export -> ns-viewer
 def train_data(output_path):
 
     # Run command to train data in splatfacto model
     print("Training...")
-    train_command = ["ns-train", "splatfacto", "--data", output_path, "--max-num-iterations", "7000"]
+    train_command = ["ns-train", "splatfacto", "--data", output_path, "--max-num-iterations", "7000",  "--viewer.quit-on-train-completion", "True"]
     subprocess.run(train_command)
 
 def export_and_download(uploaded_video):
