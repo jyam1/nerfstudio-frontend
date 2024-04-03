@@ -147,7 +147,7 @@ def export_and_download(uploaded_video):
     
     ply_output_path = uploaded_video.filename + "_ply"
     config_path = find_config_filepath()
-    ply_file_path = os.path.join(ply_output_path, "filename")
+    ply_file_path = os.path.join(ply_output_path, "splat.ply")
     os.mkdir(ply_output_path)
     
     ns_export_command = ["ns-export", "gaussian-splat", "--load-config", config_path[0], "--output-dir", ply_output_path] 
@@ -156,7 +156,7 @@ def export_and_download(uploaded_video):
     flask.send_file(ply_file_path, as_attachment=True)
 
 def find_config_filepath():
-    find_filepath_command = ["find", "/outputs", "-name", "config.yml"]
+    find_filepath_command = ["find", "./outputs", "-name", "config.yml"]
     result = subprocess.run(find_filepath_command, capture_output=True, text=True)
     
     output = result.stdout.strip().split('\n')
