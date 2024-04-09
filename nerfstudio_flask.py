@@ -143,6 +143,14 @@ def train_data(output_path):
     train_command = ["ns-train", "splatfacto", "--data", output_path, "--max-num-iterations", "7000",  "--viewer.quit-on-train-completion", "True"]
     subprocess.run(train_command)
 
+'''
+ Function:      export_and_download
+ Purpose:       Automatically exports 3D gaussian to a .ply file and downloads it on user's browser
+ Parameters:    
+    (str)uploaded_video:         Name of user's uploaded video
+ Returns:
+    N/A
+''' 
 def export_and_download(uploaded_video):
     
     ply_output_path = uploaded_video.filename + "_ply"
@@ -155,6 +163,14 @@ def export_and_download(uploaded_video):
     
     flask.send_file(ply_file_path, as_attachment=True)
 
+'''
+ Function:      find_config_filepath
+ Purpose:       Find the config.yml file path (assumes there is only one user)
+ Parameters:    
+    N/A
+ Returns:
+    (str)output:    filepath for the config.yml file
+''' 
 def find_config_filepath():
     find_filepath_command = ["find", "./outputs", "-name", "config.yml"]
     result = subprocess.run(find_filepath_command, capture_output=True, text=True)
@@ -163,6 +179,14 @@ def find_config_filepath():
     
     return output
 
+'''
+ Function:      viewer
+ Purpose:       Automatically open web-based viewer for user after automatic export
+ Parameters:    
+    N/A
+ Returns:
+    N/A
+''' 
 def viewer():
     config_path = find_config_filepath()
     ns_viewer_command = ["ns-viewer", "--load-config", config_path[0]]
